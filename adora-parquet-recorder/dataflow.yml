@@ -1,0 +1,22 @@
+nodes:
+  - id: recorder
+    path: recorder.py
+    restart_policy: on-failure    # [Adora独有] 节点崩溃后自动重启，Dora无此功能
+    inputs:
+      image: camera/image
+    outputs:
+      - status
+    env:
+      LOG_DIR: logs
+      BATCH_SIZE: 30
+
+  - id: camera
+    path: camera.py
+    restart_policy: on-failure    # [Adora独有] 节点崩溃后自动重启，Dora无此功能
+    inputs:
+      tick: adora/timer/millis/50
+      recorder_status: recorder/status
+    outputs:
+      - image
+    env:
+      CAMERA_INDEX: 0
